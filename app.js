@@ -1,40 +1,43 @@
-let users = [
-    'Gitesh',
-    'Abhishek',
-    'Brajesh',
-    'Vipin',
-    'Shrijani',
-    'Snehankita',
-    'Ayush',
-    'Akshita',
-    'Vibhu'
-  ];
-  
-  ul = document.getElementById("users-list");
-  
-  let render_lists = function(lists){
-    let li = "";
-    for(index in lists){
-      li += "<li>" + lists[index] + "</li>";
-    }
-    ul.innerHTML = li;
+import * as JsSearch from './node_modules/js-search/dist/esm/js-search.js';
+
+var theGreatGatsby = {
+  isbn: '9781597226769',
+  title: 'The Great Gatsby',
+  author: {
+    name: 'F. Scott Fitzgerald'
+  },
+  tags: ['book', 'inspirational']
+};
+var theDaVinciCode = {
+  isbn: '0307474275',
+  title: 'The DaVinci Code',
+  author: {
+    name: 'Dan Brown'
+  },
+  tags: ['book', 'mystery']
+};
+var angelsAndDemons = {
+  isbn: '074349346X',
+  title: 'Angels & Demons',
+  author: {
+    name: 'Dan Brown',
+  },
+  tags: ['book', 'mystery']
+};
+var search = new JsSearch.Search('isbn');
+search.addIndex('title');
+search.addIndex(['author', 'name']);
+search.addIndex('tags')
+search.addDocuments([theGreatGatsby, theDaVinciCode, angelsAndDemons]);
+
+document.addEventListener("keypress", function(e){
+  if(e.key==='Enter'){
+    let q=document.getElementById("query").value;
+    let result=search.search(q);
+    console.log(result);
   }
-  
-  render_lists(users);
-  
-  // lets filters it
-  input = document.getElementById('filter_users');
-  
-  let filterUsers = function(event){
-    keyword = input.value.toLowerCase();
-    filtered_users = users.filter(function(user){
-          user = user.toLowerCase();
-         return user.indexOf(keyword) > -1; 
-    });
-    
-    render_lists(filtered_users);
-  }
-  
-  input.addEventListener('keyup', filterUsers);
-  
-  
+})
+//console.log(search.search(a));    // [theGreatGatsby, theDaVinciCode]
+//console.log(search.search(b));  // [theGreatGatsby]
+//console.log(search.search('dan'));    // [angelsAndDemons, theDaVinciCode]
+//console.log(search.search('mystery'));
